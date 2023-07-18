@@ -37,8 +37,9 @@ async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(
     db.transactions.insert_one(transaction.dict())
     #removing the files
     for fil in os.walk(os.path.join(Path.cwd(), "tmp_files")):
-        if os.path.isfile(fil) :
-            os.remove(fil)
+        for f in fil[2]:
+            if os.path.isfile(f):
+                os.remove(os.path.join(fil[0], f))
     return {"message": f"Successfully uploaded", "status": 200}
 
 
@@ -64,8 +65,9 @@ async def get_from_fillable(files: List[UploadFile] = File(...), cluster: str = 
     db.transactions.insert_one(transaction.dict())
     # removing the files
     for fil in os.walk(os.path.join(Path.cwd(), "tmp_files")):
-        if os.path.isfile(fil):
-            os.remove(fil)
+        for f in fil[2]:
+            if os.path.isfile(f):
+                os.remove(os.path.join(fil[0], f))
     return {"message": f"Successfully uploaded", "status": 200}
 
 

@@ -78,3 +78,7 @@ def find_cluster_from_resume(resume):
 def find_cluster_from_skills(skills):
     x, data, data_dict = format_data(skills, True)
     return find_cluster(data, x, data_dict)
+
+#To add
+def gzip_approach():
+    pass
