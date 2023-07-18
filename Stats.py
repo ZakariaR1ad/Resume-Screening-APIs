@@ -22,11 +22,6 @@ async def get_count():
     return {"FreeResumeCount": db.resumes.count_documents({}), "FormattedResumeCount": db.formatted_resumes.count_documents({})}
 
 
-@stats.get("/MonthlyProfiles")
-async def get_count_per_month():
-    return {"FreeResumeCount": db.resumes.count_documents({}), "FormattedResumeCount": db.formatted_resumes.count_documents({})}
-
-
 @stats.get("/Transactions")
 async def get_transactions(n):
     transactions = db.transactions.find().sort("date", -1).limit(int(n))
@@ -36,7 +31,7 @@ async def get_transactions(n):
     return {"transactions": json.dumps(list(transactions))}
 
 
-@stats.get("/v1/getStats")
+@stats.get("/getStats")
 async def get_stats():
     try:
         transactions = db.transactions.find({}).sort("date", pymongo.DESCENDING).limit(100)
