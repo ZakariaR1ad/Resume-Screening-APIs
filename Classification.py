@@ -9,29 +9,8 @@ out_file_path = os.path.abspath(os.path.curdir)
 classification = APIRouter()
 
 
-@classification.post("/v1/extractData")
-async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(...)):
-    result = []
-    for file in files:
-        text = ""
-        try:
-            contents = file.file.read()
-            working_path = os.path.join(Path.cwd(), "tmp_files", file.filename)
-            with open(working_path, 'wb') as f:
-                f.write(contents)
-            response = json.loads(process(working_path, cluster))
-            text = response["resume"]
-            file_id = os.path.join(Path.cwd(), "tmp_files", response["file_id"]+".pdf")
-            os.renames(os.path.join(Path.cwd(), "tmp_files", file.filename), file_id)
-        except Exception as e:
-            return {"message": "There was an error uploading the file", "error": str(e)}
-        #finally:
-            #file.file.close()
-        result.append(text)
-    return {"message": f"Successfully uploaded", "result": json.dumps(result), "cluster": cluster}
 
-
-@classification.post("/v2/extractData")
+@classification.post("/extractData")
 async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(...), method: str = Body(...)):
     transaction = Transaction(cluster=cluster, type="Inserting Data", documents=[], date = int(time.time()))
     result = []
@@ -65,7 +44,7 @@ async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(
     return {"message": f"Successfully uploaded", "status": 200}
 
 
-@classification.post("/v1/extractDataFromFormat")
+@classification.post("/extractDataFromFormat")
 async def get_from_fillable(files: List[UploadFile] = File(...), cluster: str = Body(...)):
     transaction = Transaction(cluster=cluster, type="Inserting Forms", documents=[], date = int(time.time()))
     CVs = []
@@ -92,7 +71,7 @@ async def get_from_fillable(files: List[UploadFile] = File(...), cluster: str = 
     return {"message": f"Successfully uploaded", "status": 200}
 
 
-@classification.post("/v1/getResumes")
+@classification.post("/getResumes")
 async def get_resume(job: jobDescription, n: int = Body(...), cluster: str = Body(...)):
     transaction = Transaction(cluster=cluster, type="Profile Lookup", documents=[], date= int(time.time()))
     results = await get_top_profiles(job, cluster, n)
