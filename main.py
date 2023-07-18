@@ -25,8 +25,6 @@ app.add_middleware(
 )
 
 
-app.include_router(stats)
-app.include_router(classification)
-app.include_router(auth, prefix="/auth")
-
+app.include_router(stats, prefix="/stats")
+app.include_router(classification, prefix="/classification")
 

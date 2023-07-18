@@ -183,7 +183,7 @@ def get_text_by_section(path):
     return result
 
 
-def process_v2(path, cluster="automatic", thumb_link="", file_link=""):
+def process(path, cluster="automatic", thumb_link="", file_link=""):
     try:
         raw_text = get_text_by_section(path)
         result = classify_sections(raw_text)

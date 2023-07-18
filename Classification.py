@@ -8,10 +8,8 @@ out_file_path = os.path.abspath(os.path.curdir)
 
 classification = APIRouter()
 
-
-
 @classification.post("/extractData")
-async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(...), method: str = Body(...)):
+async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(...)):
     transaction = Transaction(cluster=cluster, type="Inserting Data", documents=[], date = int(time.time()))
     result = []
     for file in files:
@@ -26,7 +24,7 @@ async def extract_data(files: List[UploadFile] = File(...), cluster: str = Body(
             page.save(working_path.replace(".pdf", ".jpg"), 'JPEG')
             thumb_link = upload_to_storage(working_path.replace(".pdf", ".jpg"), "thumbnails/Free")
             file_link = upload_to_storage(working_path, "Free")
-            response = json.loads(process_v2(working_path, cluster, method, thumb_link, file_link))
+            response = json.loads(process(working_path, cluster, thumb_link, file_link))
             transaction.cluster = response["cluster"]
             cv = response["id"]
 
